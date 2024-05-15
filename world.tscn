@@ -1,0 +1,39 @@
+[gd_scene load_steps=5 format=3 uid="uid://dcm524wnm6pmq"]
+
+[ext_resource type="PackedScene" uid="uid://nq2wxo7m44xs" path="res://border.tscn" id="1_dgt1g"]
+[ext_resource type="PackedScene" uid="uid://dqi3weic1fugd" path="res://player/player.tscn" id="2_h3m1o"]
+[ext_resource type="PackedScene" uid="uid://csyonitclablq" path="res://mash_mouse_forced.tscn" id="3_qqsb0"]
+[ext_resource type="PackedScene" uid="uid://cqj2bomr3gd4m" path="res://frame_by_frame_debug.tscn" id="4_ne3rx"]
+
+[node name="world" type="Node2D"]
+
+[node name="floor1" parent="." instance=ExtResource("1_dgt1g")]
+position = Vector2(-1000, 0)
+
+[node name="floor2" parent="." instance=ExtResource("1_dgt1g")]
+
+[node name="floor3" parent="." instance=ExtResource("1_dgt1g")]
+position = Vector2(1000, 0)
+
+[node name="floor4" parent="." instance=ExtResource("1_dgt1g")]
+position = Vector2(2000, 0)
+
+[node name="floor5" parent="." instance=ExtResource("1_dgt1g")]
+position = Vector2(-2000, 0)
+
+[node name="wall1" parent="." instance=ExtResource("1_dgt1g")]
+position = Vector2(-2500, -500)
+rotation = 1.5708
+
+[node name="wall2" parent="." instance=ExtResource("1_dgt1g")]
+position = Vector2(2500, -500)
+rotation = 1.5708
+
+[node name="player" parent="." instance=ExtResource("2_h3m1o")]
+position = Vector2(-31, -481)
+
+[node name="mash_mouse_forced" parent="." instance=ExtResource("3_qqsb0")]
+position = Vector2(434, -114)
+continuous_cd = 1
+
+[node name="frame_by_frame_debug" parent="." instance=ExtResource("4_ne3rx")]

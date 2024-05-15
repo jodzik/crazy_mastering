@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://cqj2bomr3gd4m"]
+
+[ext_resource type="Script" path="res://frame_by_frame_debug.gd" id="1_ayfkm"]
+
+[node name="frame_by_frame_debug" type="Node"]
+process_mode = 3
+script = ExtResource("1_ayfkm")
