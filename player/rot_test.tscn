@@ -1,0 +1,43 @@
+[gd_scene load_steps=4 format=3 uid="uid://xp0swguvg3h6"]
+
+[sub_resource type="GDScript" id="GDScript_558mc"]
+script/source = "extends RigidBody2D
+
+func _physics_process(delta):
+	pass
+"
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_5ix0y"]
+
+[sub_resource type="GDScript" id="GDScript_0heyq"]
+script/source = "extends Node
+
+@export var target: RigidBody2D
+@export var offset: float
+
+func _physics_process(delta):
+	target.rotation += delta + offset
+"
+
+[node name="RotTest" type="Node2D"]
+
+[node name="RigidBody2D" type="RigidBody2D" parent="."]
+lock_rotation = true
+script = SubResource("GDScript_558mc")
+
+[node name="Sprite2D" type="Sprite2D" parent="RigidBody2D"]
+scale = Vector2(50, 100)
+texture = SubResource("CanvasTexture_5ix0y")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="RigidBody2D"]
+polygon = PackedVector2Array(-25, -50, 25, -50, 25, 50, -25, 50)
+
+[node name="Camera2D" type="Camera2D" parent="RigidBody2D"]
+position = Vector2(46, -309)
+offset = Vector2(0, 100)
+zoom = Vector2(0.5, 0.5)
+
+[node name="rotator" type="Node" parent="." node_paths=PackedStringArray("target")]
+script = SubResource("GDScript_0heyq")
+target = NodePath("../RigidBody2D")
+offset = 1.0

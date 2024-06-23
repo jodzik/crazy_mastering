@@ -277,6 +277,8 @@ left_leg = NodePath("hip/leg_l")
 
 [node name="hip_bone" type="Bone2D" parent="skelet/Skeleton2DPhysical"]
 position = Vector2(-23, 154)
+rotation = -3.14159
+scale = Vector2(1, -1)
 rest = Transform2D(1, 0, 0, 1, -23, 154)
 
 [node name="leg_l" type="Bone2D" parent="skelet/Skeleton2DPhysical/hip_bone"]

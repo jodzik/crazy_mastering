@@ -1,0 +1,215 @@
+[gd_scene load_steps=7 format=3 uid="uid://dcruvftf3xhf5"]
+
+[ext_resource type="Script" path="res://player/rigid_tp.gd" id="1_csp0e"]
+[ext_resource type="Script" path="res://pin_joint_2d_reinforced.gd" id="1_tr22h"]
+
+[sub_resource type="GDScript" id="GDScript_4upv5"]
+script/source = "extends Node2D
+
+
+@onready var _leg_l_pos_hip: Vector2 = $leg_l.global_position - $hip.global_position
+@onready var _leg_r_pos_hip: Vector2 = $leg_r.global_position - $hip.global_position
+
+var _cur_flip: bool = false
+
+
+func _ready():
+	var collisions: Array[RigidBody2D] = []
+	collisions.assign(Find.nodes_of_type(self, \"RigidBody2D\"))
+	_setup_collisions_among_themselves(collisions)
+
+func _process(delta):
+	if Input.is_action_just_pressed(\"move_left\"):
+		_flip_left()
+	elif Input.is_action_just_pressed(\"move_right\"):
+		if $leg_l.freeze:
+			$leg_l.freeze = true
+			$leg_r.freeze = true
+			$hip.freeze = true
+		else:
+			$leg_l.freeze = false
+			$leg_r.freeze = false
+			$hip.freeze = false
+	
+	#if $leg_l.freeze:
+		#$leg_l.freeze = false
+		#$leg_r.freeze = false
+		#$hip.freeze = false
+
+func _flip():
+	#for child in self.get_children():
+		#if child is RigidBody2D:
+			#child.linear_velocity = 0
+			#child.angular_velocity = 0
+	if _cur_flip:
+		_flip_right()
+	else:
+		_flip_left()
+	_cur_flip = !_cur_flip
+
+func _flip_left():
+	print(\"flip left\")
+	var leg_l = $leg_l as RigidBody2D
+	var leg_r = $leg_r as RigidBody2D
+	#var joint_l = leg_l.find_child(\"PinJoint\", false) as PinJoint2DReinforced
+	#var joint_r = leg_r.find_child(\"PinJoint\", false) as PinJoint2DReinforced
+	var hip = $hip as RigidBody2D
+	#leg_l.global_position = hip.global_position + _leg_r_pos_hip
+	#leg_r.global_position = hip.global_position + _leg_l_pos_hip
+	#print(\"leg_l_pos_hip=\", _leg_l_pos_hip)
+	#print(\"leg_r_pos_hip=\", _leg_r_pos_hip)
+
+	_set_rigid_body_pos(leg_l, hip.global_position + _leg_r_pos_hip)
+	_set_rigid_body_pos(leg_r, hip.global_position + _leg_l_pos_hip)
+	_update_joints(leg_l)
+	_update_joints(leg_r)
+
+func _flip_right():
+	print(\"flip right\")
+	var leg_l = $leg_l
+	var leg_r = $leg_r
+	var hip = $hip
+	leg_l.global_position = hip.global_position + _leg_l_pos_hip
+	leg_r.global_position = hip.global_position + _leg_r_pos_hip
+	_update_joints(leg_l)
+	_update_joints(leg_r)
+
+func _update_joints(body: RigidBody2D):
+	for child in body.get_children():
+		if child is PinJoint2DReinforced:
+			print(\"update joint: \", child.name, \" - \", child.global_position)
+			body.add_child(PinJoint2DReinforced.from(child))
+			child.queue_free()
+
+func _setup_collisions_among_themselves(elements: Array[RigidBody2D]):
+	for i in elements:
+		for j in elements:
+			if i != j:
+				i.add_collision_exception_with(j)
+
+func _set_rigid_body_pos(body: RigidBody2D, pos: Vector2):
+	PhysicsServer2D.body_set_state(
+		body.get_rid(),
+		PhysicsServer2D.BODY_STATE_TRANSFORM,
+		Transform2D.IDENTITY.translated(pos)
+	)
+"
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_kr578"]
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_wuely"]
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_x44rq"]
+
+[node name="rigid_flip_test" type="Node2D"]
+script = SubResource("GDScript_4upv5")
+
+[node name="body" type="RigidBody2D" parent="."]
+position = Vector2(12, -39)
+script = ExtResource("1_csp0e")
+
+[node name="Sprite2D" type="Sprite2D" parent="body"]
+modulate = Color(0.659955, 0.270728, 0.511378, 1)
+scale = Vector2(10, 60)
+texture = SubResource("CanvasTexture_kr578")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="body"]
+polygon = PackedVector2Array(-5, -30, 5, -30, 5, 30, -5, 30)
+
+[node name="PinJoint2DReinforced" type="PinJoint2D" parent="body"]
+position = Vector2(0, 32)
+node_a = NodePath("../../hip")
+node_b = NodePath("..")
+motor_enabled = true
+script = ExtResource("1_tr22h")
+
+[node name="hip" type="RigidBody2D" parent="."]
+lock_rotation = true
+script = ExtResource("1_csp0e")
+
+[node name="Camera2D" type="Camera2D" parent="hip"]
+position = Vector2(46, -309)
+offset = Vector2(0, 100)
+
+[node name="Sprite2D" type="Sprite2D" parent="hip"]
+scale = Vector2(50, 10)
+texture = SubResource("CanvasTexture_wuely")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="hip"]
+polygon = PackedVector2Array(-25, -5, 25, -5, 25, 5, -25, 5)
+
+[node name="leg_l" type="RigidBody2D" parent="."]
+position = Vector2(-20, 22)
+lock_rotation = true
+script = ExtResource("1_csp0e")
+
+[node name="Sprite2D" type="Sprite2D" parent="leg_l"]
+modulate = Color(0.164781, 2.69532e-06, 0.792451, 1)
+scale = Vector2(10, 30)
+texture = SubResource("CanvasTexture_x44rq")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="leg_l"]
+polygon = PackedVector2Array(-5, -15, 5, -15, 5, 15, -5, 15)
+
+[node name="PinJoint2DReinforced" type="PinJoint2D" parent="leg_l"]
+position = Vector2(0, -16)
+node_a = NodePath("../../hip")
+node_b = NodePath("..")
+script = ExtResource("1_tr22h")
+
+[node name="shin_l" type="RigidBody2D" parent="."]
+position = Vector2(-20, 54)
+lock_rotation = true
+script = ExtResource("1_csp0e")
+
+[node name="Sprite2D" type="Sprite2D" parent="shin_l"]
+modulate = Color(5.77569e-07, 0.455153, 0.585758, 1)
+scale = Vector2(10, 30)
+texture = SubResource("CanvasTexture_x44rq")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="shin_l"]
+polygon = PackedVector2Array(-5, -15, 5, -15, 5, 15, -5, 15)
+
+[node name="PinJoint2DReinforced" type="PinJoint2D" parent="shin_l"]
+position = Vector2(0, -16)
+node_a = NodePath("../../leg_l")
+node_b = NodePath("..")
+script = ExtResource("1_tr22h")
+
+[node name="leg_r" type="RigidBody2D" parent="."]
+position = Vector2(20, 22)
+lock_rotation = true
+script = ExtResource("1_csp0e")
+
+[node name="Sprite2D" type="Sprite2D" parent="leg_r"]
+modulate = Color(0.840823, 0, 0.0936414, 1)
+scale = Vector2(10, 30)
+texture = SubResource("CanvasTexture_kr578")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="leg_r"]
+polygon = PackedVector2Array(-5, -15, 5, -15, 5, 15, -5, 15)
+
+[node name="PinJoint2DReinforced" type="PinJoint2D" parent="leg_r"]
+position = Vector2(0, -16)
+node_a = NodePath("../../hip")
+node_b = NodePath("..")
+script = ExtResource("1_tr22h")
+
+[node name="shin_r" type="RigidBody2D" parent="."]
+position = Vector2(20, 54)
+lock_rotation = true
+script = ExtResource("1_csp0e")
+
+[node name="Sprite2D" type="Sprite2D" parent="shin_r"]
+modulate = Color(0.616925, 0.368568, 0.0582334, 1)
+scale = Vector2(10, 30)
+texture = SubResource("CanvasTexture_kr578")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="shin_r"]
+polygon = PackedVector2Array(-5, -15, 5, -15, 5, 15, -5, 15)
+
+[node name="PinJoint2DReinforced" type="PinJoint2D" parent="shin_r"]
+position = Vector2(0, -16)
+node_a = NodePath("../../leg_r")
+node_b = NodePath("..")
+script = ExtResource("1_tr22h")

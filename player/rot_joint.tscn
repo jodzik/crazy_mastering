@@ -1,0 +1,108 @@
+[gd_scene load_steps=6 format=3 uid="uid://bem0djhr3j52u"]
+
+[ext_resource type="Script" path="res://pin_joint_2d_reinforced.gd" id="1_bk4pq"]
+[ext_resource type="Script" path="res://player/anim_helper.gd" id="2_poujq"]
+
+[sub_resource type="GDScript" id="GDScript_ccutr"]
+script/source = "extends Node2D
+
+
+func _draw():
+	pass
+	DebugDraw.draw_collisions(self)
+	#DebugDraw.draw_joints(self)
+
+func _process(delta):
+	queue_redraw()
+	pass
+
+func _physics_process(delta):
+	for child: PinJoint2D in self.find_children(\"*\", \"PinJoint2D\"):
+		#child.global_position = child.global_position
+		pass
+"
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_ep3ae"]
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_vu1j1"]
+
+[node name="RotJoint" type="Node2D"]
+script = SubResource("GDScript_ccutr")
+
+[node name="Body" type="RigidBody2D" parent="."]
+can_sleep = false
+lock_rotation = true
+
+[node name="Sprite2D" type="Sprite2D" parent="Body"]
+modulate = Color(0.425261, 0.422937, 9.62615e-08, 1)
+z_index = -1
+scale = Vector2(96, 196)
+texture = SubResource("CanvasTexture_ep3ae")
+
+[node name="Camera2D" type="Camera2D" parent="Body"]
+position = Vector2(46, -309)
+offset = Vector2(0, 100)
+zoom = Vector2(0.5, 0.5)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Body"]
+polygon = PackedVector2Array(-50, -100, 50, -100, 50, 100, -50, 100)
+
+[node name="Leg" type="RigidBody2D" parent="."]
+position = Vector2(0, 110)
+can_sleep = false
+lock_rotation = true
+
+[node name="Sprite2D" type="Sprite2D" parent="Leg"]
+modulate = Color(0, 0.615214, 0.616039, 1)
+z_index = -1
+position = Vector2(0, 100)
+scale = Vector2(78, 198)
+texture = SubResource("CanvasTexture_vu1j1")
+
+[node name="PinJoint2DReinforced" type="PinJoint2D" parent="Leg"]
+process_thread_group = 1
+process_thread_group_order = 0
+process_thread_messages = 0
+node_a = NodePath("../../Body")
+node_b = NodePath("..")
+softness = 0.1
+script = ExtResource("1_bk4pq")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Leg"]
+polygon = PackedVector2Array(-40, 0, 40, 0, 40, 200, -40, 200)
+
+[node name="Foot" type="RigidBody2D" parent="."]
+position = Vector2(-1, 320)
+can_sleep = false
+lock_rotation = true
+
+[node name="Sprite2D" type="Sprite2D" parent="Foot"]
+modulate = Color(0, 0.286275, 0.615686, 1)
+z_index = -1
+position = Vector2(0, 50)
+scale = Vector2(58, 98)
+texture = SubResource("CanvasTexture_vu1j1")
+
+[node name="PinJoint2DReinforced" type="PinJoint2D" parent="Foot"]
+process_thread_group = 1
+process_thread_group_order = 0
+process_thread_messages = 0
+node_a = NodePath("../../Leg")
+node_b = NodePath("..")
+bias = 0.9
+script = ExtResource("1_bk4pq")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Foot"]
+polygon = PackedVector2Array(-30, 0, 30, 0, 30, 100, -30, 100)
+
+[node name="anim_helper" type="Node2D" parent="."]
+process_mode = 3
+top_level = true
+script = ExtResource("2_poujq")
+
+[node name="text" type="RichTextLabel" parent="anim_helper"]
+offset_right = 253.0
+offset_bottom = 51.0
+theme_override_font_sizes/normal_font_size = 24
+text = "NULL"
+scroll_active = false

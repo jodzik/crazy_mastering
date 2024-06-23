@@ -2,7 +2,7 @@ extends Node2D
 
 @onready var _text: RichTextLabel = get_node("./text")
 var _selected_obj: RigidBody2D
-var _selected_joint: PinJoint2DReinforced
+var _selected_joint: JointBlend
 
 
 func _ready():
@@ -25,9 +25,14 @@ func _handle_result(result: Array[Dictionary]):
 		_selected_joint = null
 	else:
 		for obj in result:
-			var collider = obj["collider"]
+			var collider: Node2D = obj["collider"]
 			if collider is RigidBody2D and collider != _selected_obj:
-				var joint: PinJoint2DReinforced = collider.find_child("PinJoint2DReinforced", false)
+				print("click on: ", collider.name)
+				#var joint: JointBlend = Find.child_of_type(collider, "JointBlend", 1)
+				var joints: Array[Node] = collider.find_children("", "JointBlend", false)
+				var joint: JointBlend = null
+				if joints.size() > 0:
+					joint = joints[0]
 				if joint != null:
 					_selected_obj = collider
 					_selected_joint = joint

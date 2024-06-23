@@ -1,0 +1,713 @@
+[gd_scene load_steps=31 format=3 uid="uid://c0bd5wqxrne22"]
+
+[ext_resource type="Script" path="res://player/player_rigid.gd" id="1_djbn6"]
+[ext_resource type="Script" path="res://pin_joint_2d_reinforced.gd" id="4_hhl1e"]
+[ext_resource type="Texture2D" uid="uid://ci3nu3q7yxlmi" path="res://player/simple_body/head.png" id="6_p6is8"]
+[ext_resource type="Texture2D" uid="uid://c3wktccdo8i21" path="res://player/simple_body/body.png" id="7_1tg8u"]
+[ext_resource type="Script" path="res://physical_bone_custom.gd" id="7_wtet8"]
+[ext_resource type="Script" path="res://player/physical_skeleton.gd" id="8_akkmd"]
+[ext_resource type="Texture2D" uid="uid://dwkbnaag7ckan" path="res://player/simple_body/hip.png" id="9_iiuuw"]
+[ext_resource type="Script" path="res://player/hip_blend.gd" id="9_undwf"]
+[ext_resource type="Script" path="res://player/anim_helper.gd" id="11_msvxw"]
+[ext_resource type="Texture2D" uid="uid://dnotvwyy1qlig" path="res://player/simple_body/foot.png" id="12_4w66n"]
+[ext_resource type="Texture2D" uid="uid://on1hvsn80cs7" path="res://player/simple_body/shin.png" id="13_2r0n1"]
+[ext_resource type="Script" path="res://player/ik_scaner.gd" id="14_5nv01"]
+[ext_resource type="Texture2D" uid="uid://dw1eet6urcg7k" path="res://player/simple_body/leg.png" id="14_rngvt"]
+[ext_resource type="Script" path="res://player/joint_blend.gd" id="14_t2w1v"]
+[ext_resource type="Script" path="res://player/joint_blend_foot.gd" id="15_2hw5c"]
+[ext_resource type="Script" path="res://player/ground_adjust.gd" id="15_lyoko"]
+[ext_resource type="Script" path="res://player/joint_blend_leg.gd" id="15_uvy2a"]
+[ext_resource type="Script" path="res://player/anim_ctl.gd" id="17_bl0gv"]
+[ext_resource type="Script" path="res://player/obstacle_scanner.gd" id="17_bn0gk"]
+[ext_resource type="Script" path="res://player/anim_distributor.gd" id="20_cxsne"]
+
+[sub_resource type="Animation" id="Animation_qxckq"]
+resource_name = "idle"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("animation/distributors/leg:target_rotation_left")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("animation/distributors/leg:target_rotation_right")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("animation/distributors/shin:target_rotation_left")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("animation/distributors/shin:target_rotation_right")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("animation/distributors/foot:target_rotation_left")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("animation/distributors/foot:target_rotation_right")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("physical_skeleton:move_k")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="Animation" id="Animation_tv7e7"]
+resource_name = "walk"
+length = 1.1
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("animation/distributors/leg:target_rotation_right")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.8, 1.1),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [0.0, -0.785398, 0.436332, 0.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("animation/distributors/leg:target_rotation_left")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.8, 1.1),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 0.349066, -0.785398, 0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("animation/distributors/shin:target_rotation_right")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.8, 1.1),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 1.13446, 0.0, 0.0]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("animation/distributors/shin:target_rotation_left")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.8, 1.1),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 1.5708, 0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("physical_skeleton:move_k")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.8, 1.1),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [0.5, 1.0, 1.0, 0.5]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_i0aru"]
+_data = {
+"idle": SubResource("Animation_qxckq"),
+"walk": SubResource("Animation_tv7e7")
+}
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_2jgcf"]
+animation = &"idle"
+
+[sub_resource type="AnimationNodeTimeScale" id="AnimationNodeTimeScale_dw0fr"]
+
+[sub_resource type="Curve" id="Curve_litup"]
+bake_resolution = 20
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="AnimationNodeTransition" id="AnimationNodeTransition_8yel3"]
+xfade_time = 0.5
+xfade_curve = SubResource("Curve_litup")
+input_0/name = "idle"
+input_0/auto_advance = false
+input_0/reset = true
+input_1/name = "walk"
+input_1/auto_advance = false
+input_1/reset = true
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_csnbs"]
+animation = &"walk"
+
+[sub_resource type="AnimationNodeTimeScale" id="AnimationNodeTimeScale_kcedq"]
+
+[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_j6djf"]
+graph_offset = Vector2(-198.744, 31.6578)
+nodes/idle/node = SubResource("AnimationNodeAnimation_2jgcf")
+nodes/idle/position = Vector2(-140, 80)
+nodes/idle_speed/node = SubResource("AnimationNodeTimeScale_dw0fr")
+nodes/idle_speed/position = Vector2(60, 80)
+nodes/output/position = Vector2(480, 100)
+nodes/transition/node = SubResource("AnimationNodeTransition_8yel3")
+nodes/transition/position = Vector2(340, 80)
+nodes/walk/node = SubResource("AnimationNodeAnimation_csnbs")
+nodes/walk/position = Vector2(-140, 220)
+nodes/walk_speed/node = SubResource("AnimationNodeTimeScale_kcedq")
+nodes/walk_speed/position = Vector2(60, 220)
+node_connections = [&"idle_speed", 0, &"idle", &"output", 0, &"transition", &"transition", 0, &"idle_speed", &"transition", 1, &"walk_speed", &"walk_speed", 0, &"walk"]
+
+[node name="player_rigid" type="Node2D"]
+script = ExtResource("1_djbn6")
+draw_skeleton = true
+draw_joints = true
+
+[node name="skeleton" type="Skeleton2D" parent="."]
+
+[node name="polygons" type="Node2D" parent="skeleton"]
+
+[node name="hip" type="Bone2D" parent="skeleton"]
+rest = Transform2D(1, 0, 0, 1, -23, 155)
+
+[node name="leg_l" type="Bone2D" parent="skeleton/hip"]
+position = Vector2(25, 22)
+rotation = 1.85582
+rest = Transform2D(-0.28118, 0.959655, -0.959655, -0.28118, 55, 7)
+auto_calculate_length_and_angle = false
+length = 110.0
+bone_angle = 0.0
+
+[node name="shin_l" type="Bone2D" parent="skeleton/hip/leg_l"]
+position = Vector2(105.627, -56.9471)
+rotation = -0.305959
+rest = Transform2D(0.953559, -0.301208, 0.301208, 0.953559, 98.4779, -1.76108)
+auto_calculate_length_and_angle = false
+length = 100.0
+bone_angle = 0.0
+
+[node name="foot_l" type="Bone2D" parent="skeleton/hip/leg_l/shin_l"]
+position = Vector2(109.976, 2.30271)
+rest = Transform2D(0.0646935, -0.997905, 0.997905, 0.0646935, 106.997, 1.24014)
+auto_calculate_length_and_angle = false
+length = 20.0
+bone_angle = 0.0
+
+[node name="leg_r" type="Bone2D" parent="skeleton/hip"]
+position = Vector2(-25, 22)
+rotation = 1.77154
+rest = Transform2D(-0.199398, 0.979919, -0.979919, -0.199398, -53, 5)
+auto_calculate_length_and_angle = false
+length = 110.0
+bone_angle = 0.0
+
+[node name="shin_r" type="Bone2D" parent="skeleton/hip/leg_r"]
+position = Vector2(119.995, 1.04348)
+rotation = -0.220848
+rest = Transform2D(0.975712, -0.219057, 0.219057, 0.975712, 104.521, -2.89948)
+auto_calculate_length_and_angle = false
+length = 100.0
+bone_angle = 0.0
+
+[node name="foot_r" type="Bone2D" parent="skeleton/hip/leg_r/shin_r"]
+position = Vector2(109.978, 2.21132)
+rest = Transform2D(0.0379866, -0.999278, 0.999278, 0.0379866, 111.816, 10.2499)
+auto_calculate_length_and_angle = false
+length = 20.0
+bone_angle = 0.0
+
+[node name="body" type="Bone2D" parent="skeleton/hip"]
+position = Vector2(0, -22)
+rest = Transform2D(0.0463098, -0.998927, 0.998927, 0.0463098, -5, -44)
+auto_calculate_length_and_angle = false
+length = 160.0
+bone_angle = 0.0
+
+[node name="head" type="Bone2D" parent="skeleton/hip/body"]
+position = Vector2(0, -182)
+rotation = -1.5708
+rest = Transform2D(1, 0, 0, 1, 218.276, 0.892665)
+auto_calculate_length_and_angle = false
+length = 40.0
+bone_angle = 0.0
+
+[node name="physical_skeleton" type="Node2D" parent="."]
+script = ExtResource("8_akkmd")
+max_velocity = 200.0
+
+[node name="head" type="RigidBody2D" parent="physical_skeleton" node_paths=PackedStringArray("bone")]
+position = Vector2(0, -182)
+script = ExtResource("7_wtet8")
+bone = NodePath("../../skeleton/hip/body/head")
+
+[node name="PinJoint2DReinforced" type="PinJoint2D" parent="physical_skeleton/head"]
+node_a = NodePath("../../body")
+node_b = NodePath("..")
+motor_enabled = true
+script = ExtResource("4_hhl1e")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="physical_skeleton/head"]
+polygon = PackedVector2Array(-25, -50, 25, -50, 25, 0, -25, 0)
+
+[node name="JointBlend" type="Node" parent="physical_skeleton/head"]
+script = ExtResource("14_t2w1v")
+joint_path = NodePath("../PinJoint2DReinforced")
+
+[node name="Sprite2D" type="Sprite2D" parent="physical_skeleton/head"]
+position = Vector2(0, -25)
+texture = ExtResource("6_p6is8")
+
+[node name="body" type="RigidBody2D" parent="physical_skeleton" node_paths=PackedStringArray("bone")]
+position = Vector2(0, -22)
+script = ExtResource("7_wtet8")
+bone = NodePath("../../skeleton/hip/body")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="physical_skeleton/body"]
+polygon = PackedVector2Array(-40, -150, 40, -150, 40, 0, -40, 0)
+
+[node name="PinJoint2DReinforced" type="PinJoint2D" parent="physical_skeleton/body"]
+node_a = NodePath("../../hip")
+node_b = NodePath("..")
+motor_enabled = true
+script = ExtResource("4_hhl1e")
+velocity_max = 2000.0
+velocity_k = 40.0
+
+[node name="Sprite2D" type="Sprite2D" parent="physical_skeleton/body"]
+position = Vector2(0, -75)
+texture = ExtResource("7_1tg8u")
+
+[node name="JointBlend" type="Node" parent="physical_skeleton/body"]
+script = ExtResource("14_t2w1v")
+joint_path = NodePath("../PinJoint2DReinforced")
+
+[node name="hip" type="RigidBody2D" parent="physical_skeleton" node_paths=PackedStringArray("bone")]
+lock_rotation = true
+script = ExtResource("7_wtet8")
+bone = NodePath("../../skeleton/hip")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="physical_skeleton/hip"]
+polygon = PackedVector2Array(-40, -12, 40, -12, 40, 12, -40, 12)
+
+[node name="Camera2D" type="Camera2D" parent="physical_skeleton/hip"]
+position = Vector2(0, -300)
+offset = Vector2(0, 100)
+zoom = Vector2(0.5, 0.5)
+
+[node name="Sprite2D" type="Sprite2D" parent="physical_skeleton/hip"]
+texture = ExtResource("9_iiuuw")
+
+[node name="HipBlend" type="Node" parent="physical_skeleton/hip" node_paths=PackedStringArray("foot_l", "foot_r")]
+script = ExtResource("9_undwf")
+foot_l = NodePath("../../leg_l/shin_l/foot_l")
+foot_r = NodePath("../../leg_r/shin_r/foot_r")
+
+[node name="leg_l" type="RigidBody2D" parent="physical_skeleton" node_paths=PackedStringArray("bone")]
+position = Vector2(-25, 22)
+rotation = 0.20944
+lock_rotation = true
+script = ExtResource("7_wtet8")
+bone = NodePath("../../skeleton/hip/leg_r")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="physical_skeleton/leg_l"]
+polygon = PackedVector2Array(-15.2959, 0.184233, 14.3178, 0.0236778, 15.0451, 109.26, -14.5686, 109.42)
+
+[node name="PinJoint2DReinforced" type="PinJoint2D" parent="physical_skeleton/leg_l"]
+node_a = NodePath("../../hip")
+node_b = NodePath("..")
+motor_enabled = true
+script = ExtResource("4_hhl1e")
+velocity_max = 2000.0
+velocity_k = 40.0
+
+[node name="JointBlendLeg" type="Node" parent="physical_skeleton/leg_l" node_paths=PackedStringArray("height_scanner", "snag_scanner")]
+script = ExtResource("15_uvy2a")
+height_scanner = NodePath("../shin_l/foot_l/height_scanner_l")
+snag_scanner = NodePath("../shin_l/foot_l/snag_scanner_l")
+joint_path = NodePath("../PinJoint2DReinforced")
+lerp_speed_extra = 4.0
+
+[node name="shin_l" type="RigidBody2D" parent="physical_skeleton/leg_l" node_paths=PackedStringArray("bone")]
+position = Vector2(0, 120)
+rotation = -0.20944
+lock_rotation = true
+script = ExtResource("7_wtet8")
+bone = NodePath("../../../skeleton/hip/leg_r/shin_r")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="physical_skeleton/leg_l/shin_l"]
+polygon = PackedVector2Array(14.9494, -0.377716, 14.9494, 100.622, -15.0506, 100.622, -15.0506, -0.377716)
+
+[node name="PinJoint2DReinforced" type="PinJoint2D" parent="physical_skeleton/leg_l/shin_l"]
+node_a = NodePath("../..")
+node_b = NodePath("..")
+motor_enabled = true
+script = ExtResource("4_hhl1e")
+velocity_max = 2000.0
+velocity_k = 40.0
+nested = true
+
+[node name="JointBlendLeg" type="Node" parent="physical_skeleton/leg_l/shin_l" node_paths=PackedStringArray("height_scanner", "snag_scanner")]
+script = ExtResource("15_uvy2a")
+height_scanner = NodePath("../foot_l/height_scanner_l")
+snag_scanner = NodePath("../foot_l/snag_scanner_l")
+correction_coef = 1.25
+joint_path = NodePath("../PinJoint2DReinforced")
+lerp_speed_extra = 4.0
+
+[node name="foot_l" type="RigidBody2D" parent="physical_skeleton/leg_l/shin_l" node_paths=PackedStringArray("bone")]
+position = Vector2(0, 110)
+lock_rotation = true
+script = ExtResource("7_wtet8")
+bone = NodePath("../../../../skeleton/hip/leg_r/shin_r/foot_r")
+
+[node name="PinJoint2DReinforced" type="PinJoint2D" parent="physical_skeleton/leg_l/shin_l/foot_l"]
+node_a = NodePath("../..")
+node_b = NodePath("..")
+motor_enabled = true
+script = ExtResource("4_hhl1e")
+velocity_max = 2000.0
+velocity_k = 40.0
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="physical_skeleton/leg_l/shin_l/foot_l"]
+polygon = PackedVector2Array(-25.0506, -0.377731, 24.9494, -0.377731, 24.9494, 19.6223, -25.0506, 19.6223)
+
+[node name="height_scanner_l" type="Node2D" parent="physical_skeleton/leg_l/shin_l/foot_l"]
+position = Vector2(-40, 20)
+script = ExtResource("14_5nv01")
+distance_by = 1
+scan_type = 1
+update_period = 0.1
+
+[node name="RayCast2D" type="RayCast2D" parent="physical_skeleton/leg_l/shin_l/foot_l/height_scanner_l"]
+position = Vector2(0, -300)
+target_position = Vector2(0, 300)
+hit_from_inside = true
+
+[node name="RayCast2D2" type="RayCast2D" parent="physical_skeleton/leg_l/shin_l/foot_l/height_scanner_l"]
+position = Vector2(-10, -300)
+target_position = Vector2(0, 300)
+hit_from_inside = true
+
+[node name="RayCast2D3" type="RayCast2D" parent="physical_skeleton/leg_l/shin_l/foot_l/height_scanner_l"]
+position = Vector2(-30, -300)
+target_position = Vector2(0, 300)
+hit_from_inside = true
+
+[node name="RayCast2D4" type="RayCast2D" parent="physical_skeleton/leg_l/shin_l/foot_l/height_scanner_l"]
+position = Vector2(-60, -300)
+target_position = Vector2(0, 300)
+hit_from_inside = true
+
+[node name="snag_scanner_l" type="Node2D" parent="physical_skeleton/leg_l/shin_l/foot_l"]
+position = Vector2(60, 20)
+script = ExtResource("14_5nv01")
+distance_by = 1
+scan_type = 1
+update_period = 0.1
+
+[node name="RayCast2D" type="RayCast2D" parent="physical_skeleton/leg_l/shin_l/foot_l/snag_scanner_l"]
+position = Vector2(0, -300)
+target_position = Vector2(0, 300)
+
+[node name="RayCast2D2" type="RayCast2D" parent="physical_skeleton/leg_l/shin_l/foot_l/snag_scanner_l"]
+position = Vector2(10, -300)
+target_position = Vector2(0, 300)
+
+[node name="IkScanner" type="Node2D" parent="physical_skeleton/leg_l/shin_l/foot_l"]
+position = Vector2(-18, 10)
+script = ExtResource("14_5nv01")
+distance_by = 1
+scan_type = 2
+update_period = 0.1
+distance_offset = -10.0
+
+[node name="RayCast2D" type="RayCast2D" parent="physical_skeleton/leg_l/shin_l/foot_l/IkScanner"]
+target_position = Vector2(0, 200)
+
+[node name="RayCast2D2" type="RayCast2D" parent="physical_skeleton/leg_l/shin_l/foot_l/IkScanner"]
+position = Vector2(36, 0)
+target_position = Vector2(0, 200)
+
+[node name="JointBlendFoot" type="Node" parent="physical_skeleton/leg_l/shin_l/foot_l" node_paths=PackedStringArray("ik_scanner")]
+script = ExtResource("15_2hw5c")
+ik_scanner = NodePath("../IkScanner")
+joint_path = NodePath("../PinJoint2DReinforced")
+lerp_speed_extra = 4.0
+
+[node name="Sprite2D" type="Sprite2D" parent="physical_skeleton/leg_l/shin_l/foot_l"]
+position = Vector2(0, 10)
+texture = ExtResource("12_4w66n")
+
+[node name="Sprite2D" type="Sprite2D" parent="physical_skeleton/leg_l/shin_l"]
+position = Vector2(0, 50)
+texture = ExtResource("13_2r0n1")
+
+[node name="Sprite2D" type="Sprite2D" parent="physical_skeleton/leg_l"]
+position = Vector2(0, 55)
+texture = ExtResource("14_rngvt")
+
+[node name="leg_r" type="RigidBody2D" parent="physical_skeleton" node_paths=PackedStringArray("bone")]
+position = Vector2(25, 22)
+rotation = -0.20944
+lock_rotation = true
+script = ExtResource("7_wtet8")
+bone = NodePath("../../skeleton/hip/leg_l")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="physical_skeleton/leg_r"]
+polygon = PackedVector2Array(-15, 0, 15, 0, 15, 110, -15, 110)
+
+[node name="PinJoint2DReinforced" type="PinJoint2D" parent="physical_skeleton/leg_r"]
+node_a = NodePath("../../hip")
+node_b = NodePath("..")
+motor_enabled = true
+script = ExtResource("4_hhl1e")
+velocity_max = 2000.0
+velocity_k = 40.0
+
+[node name="JointBlendLeg" type="Node" parent="physical_skeleton/leg_r" node_paths=PackedStringArray("height_scanner", "snag_scanner")]
+script = ExtResource("15_uvy2a")
+height_scanner = NodePath("../shin_r/foot_r/height_scanner_r")
+snag_scanner = NodePath("../shin_r/foot_r/snag_scanner_r")
+joint_path = NodePath("../PinJoint2DReinforced")
+lerp_speed_extra = 4.0
+
+[node name="shin_r" type="RigidBody2D" parent="physical_skeleton/leg_r" node_paths=PackedStringArray("bone")]
+position = Vector2(0, 120)
+rotation = 0.20944
+lock_rotation = true
+script = ExtResource("7_wtet8")
+bone = NodePath("../../../skeleton/hip/leg_l/shin_l")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="physical_skeleton/leg_r/shin_r"]
+modulate = Color(0.855621, 0.100615, 3.85046e-07, 1)
+polygon = PackedVector2Array(-14.9494, -0.377716, 15.0506, -0.377716, 15.0506, 99.6223, -14.9494, 99.6223)
+
+[node name="PinJoint2DReinforced" type="PinJoint2D" parent="physical_skeleton/leg_r/shin_r"]
+node_a = NodePath("../..")
+node_b = NodePath("..")
+motor_enabled = true
+script = ExtResource("4_hhl1e")
+velocity_max = 2000.0
+velocity_k = 40.0
+nested = true
+
+[node name="JointBlendLeg" type="Node" parent="physical_skeleton/leg_r/shin_r" node_paths=PackedStringArray("height_scanner", "snag_scanner")]
+script = ExtResource("15_uvy2a")
+height_scanner = NodePath("../foot_r/height_scanner_r")
+snag_scanner = NodePath("../foot_r/snag_scanner_r")
+correction_coef = 1.25
+joint_path = NodePath("../PinJoint2DReinforced")
+lerp_speed_extra = 4.0
+
+[node name="foot_r" type="RigidBody2D" parent="physical_skeleton/leg_r/shin_r" node_paths=PackedStringArray("bone")]
+position = Vector2(0, 110)
+lock_rotation = true
+script = ExtResource("7_wtet8")
+bone = NodePath("../../../../skeleton/hip/leg_l/shin_l/foot_l")
+
+[node name="PinJoint2DReinforced" type="PinJoint2D" parent="physical_skeleton/leg_r/shin_r/foot_r"]
+node_a = NodePath("../..")
+node_b = NodePath("..")
+motor_enabled = true
+script = ExtResource("4_hhl1e")
+velocity_max = 2000.0
+velocity_k = 40.0
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="physical_skeleton/leg_r/shin_r/foot_r"]
+polygon = PackedVector2Array(-24.9494, -0.377731, 25.0506, -0.377731, 25.0506, 19.6223, -24.9494, 19.6223)
+
+[node name="height_scanner_r" type="Node2D" parent="physical_skeleton/leg_r/shin_r/foot_r"]
+position = Vector2(40, 20)
+script = ExtResource("14_5nv01")
+distance_by = 1
+scan_type = 1
+update_period = 0.1
+
+[node name="RayCast2D" type="RayCast2D" parent="physical_skeleton/leg_r/shin_r/foot_r/height_scanner_r"]
+position = Vector2(0, -300)
+target_position = Vector2(0, 300)
+hit_from_inside = true
+
+[node name="RayCast2D2" type="RayCast2D" parent="physical_skeleton/leg_r/shin_r/foot_r/height_scanner_r"]
+position = Vector2(10, -300)
+target_position = Vector2(0, 300)
+hit_from_inside = true
+
+[node name="RayCast2D3" type="RayCast2D" parent="physical_skeleton/leg_r/shin_r/foot_r/height_scanner_r"]
+position = Vector2(30, -300)
+target_position = Vector2(0, 300)
+hit_from_inside = true
+
+[node name="RayCast2D4" type="RayCast2D" parent="physical_skeleton/leg_r/shin_r/foot_r/height_scanner_r"]
+position = Vector2(60, -300)
+target_position = Vector2(0, 300)
+hit_from_inside = true
+
+[node name="snag_scanner_r" type="Node2D" parent="physical_skeleton/leg_r/shin_r/foot_r"]
+position = Vector2(-70, 20)
+script = ExtResource("14_5nv01")
+distance_by = 1
+scan_type = 1
+update_period = 0.1
+
+[node name="RayCast2D" type="RayCast2D" parent="physical_skeleton/leg_r/shin_r/foot_r/snag_scanner_r"]
+position = Vector2(0, -300)
+target_position = Vector2(0, 300)
+
+[node name="RayCast2D2" type="RayCast2D" parent="physical_skeleton/leg_r/shin_r/foot_r/snag_scanner_r"]
+position = Vector2(10, -300)
+target_position = Vector2(0, 300)
+
+[node name="IkScanner" type="Node2D" parent="physical_skeleton/leg_r/shin_r/foot_r"]
+position = Vector2(-18, 10)
+script = ExtResource("14_5nv01")
+distance_by = 1
+scan_type = 2
+update_period = 0.1
+distance_offset = -10.0
+
+[node name="RayCast2D" type="RayCast2D" parent="physical_skeleton/leg_r/shin_r/foot_r/IkScanner"]
+target_position = Vector2(0, 200)
+
+[node name="RayCast2D2" type="RayCast2D" parent="physical_skeleton/leg_r/shin_r/foot_r/IkScanner"]
+position = Vector2(36, 0)
+target_position = Vector2(0, 200)
+
+[node name="JointBlendFoot" type="Node" parent="physical_skeleton/leg_r/shin_r/foot_r" node_paths=PackedStringArray("ik_scanner")]
+script = ExtResource("15_2hw5c")
+ik_scanner = NodePath("../IkScanner")
+joint_path = NodePath("../PinJoint2DReinforced")
+lerp_speed_extra = 4.0
+
+[node name="Sprite2D" type="Sprite2D" parent="physical_skeleton/leg_r/shin_r/foot_r"]
+position = Vector2(0, 10)
+texture = ExtResource("12_4w66n")
+
+[node name="Sprite2D" type="Sprite2D" parent="physical_skeleton/leg_r/shin_r"]
+position = Vector2(0, 50)
+texture = ExtResource("13_2r0n1")
+
+[node name="Sprite2D" type="Sprite2D" parent="physical_skeleton/leg_r"]
+position = Vector2(0, 55)
+texture = ExtResource("14_rngvt")
+
+[node name="ground_adjust" type="Node" parent="physical_skeleton"]
+script = ExtResource("15_lyoko")
+
+[node name="obstacle_scanner" type="Node" parent="physical_skeleton" node_paths=PackedStringArray("height_scanner_l", "height_scanner_r")]
+script = ExtResource("17_bn0gk")
+height_scanner_l = NodePath("../leg_l/shin_l/foot_l/height_scanner_l")
+height_scanner_r = NodePath("../leg_r/shin_r/foot_r/height_scanner_r")
+height_for_block = 140.0
+
+[node name="anim_helper" type="Node2D" parent="."]
+process_mode = 3
+top_level = true
+script = ExtResource("11_msvxw")
+
+[node name="text" type="RichTextLabel" parent="anim_helper"]
+offset_right = 253.0
+offset_bottom = 51.0
+theme_override_font_sizes/normal_font_size = 24
+text = "NULL"
+scroll_active = false
+
+[node name="animation" type="Node" parent="."]
+
+[node name="animation_player" type="AnimationPlayer" parent="animation"]
+root_node = NodePath("../..")
+libraries = {
+"": SubResource("AnimationLibrary_i0aru")
+}
+
+[node name="animation_tree" type="AnimationTree" parent="animation"]
+root_node = NodePath("../..")
+tree_root = SubResource("AnimationNodeBlendTree_j6djf")
+anim_player = NodePath("../animation_player")
+parameters/idle_speed/scale = 1.0
+parameters/transition/current_state = "idle"
+parameters/transition/transition_request = ""
+parameters/transition/current_index = 0
+parameters/walk_speed/scale = 1.0
+
+[node name="anim_ctl" type="Node" parent="animation" node_paths=PackedStringArray("anim_tree")]
+script = ExtResource("17_bl0gv")
+anim_tree = NodePath("../animation_tree")
+
+[node name="distributors" type="Node" parent="animation"]
+
+[node name="leg" type="Node" parent="animation/distributors" node_paths=PackedStringArray("right_joint_blend", "left_joint_blend")]
+script = ExtResource("20_cxsne")
+right_joint_blend = NodePath("../../../physical_skeleton/leg_l/JointBlendLeg")
+left_joint_blend = NodePath("../../../physical_skeleton/leg_r/JointBlendLeg")
+
+[node name="shin" type="Node" parent="animation/distributors" node_paths=PackedStringArray("right_joint_blend", "left_joint_blend")]
+script = ExtResource("20_cxsne")
+right_joint_blend = NodePath("../../../physical_skeleton/leg_l/shin_l/JointBlendLeg")
+left_joint_blend = NodePath("../../../physical_skeleton/leg_r/shin_r/JointBlendLeg")
+
+[node name="foot" type="Node" parent="animation/distributors" node_paths=PackedStringArray("right_joint_blend", "left_joint_blend")]
+script = ExtResource("20_cxsne")
+right_joint_blend = NodePath("../../../physical_skeleton/leg_l/shin_l/foot_l/JointBlendFoot")
+left_joint_blend = NodePath("../../../physical_skeleton/leg_r/shin_r/foot_r/JointBlendFoot")
